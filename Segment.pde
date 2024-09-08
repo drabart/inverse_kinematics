@@ -1,5 +1,6 @@
 class Segment
 {
+  private float length;
   private PVector start_point;
   private PVector end_point;
   private float width_low;
@@ -12,8 +13,46 @@ class Segment
     this.end_point = end_point;
     this.width_low = width_low;
     this.width_high = width_high;
+    this.length = end_point.copy().sub(start_point).mag();
   }
-  
+
+  public void move(PVector start_point, PVector end_point)
+  {
+    this.start_point = start_point;
+    // make sure segment is of constant length
+    end_point = end_point
+      .sub(start_point)
+      .setMag(this.length)
+      .add(start_point);
+    this.end_point = end_point;
+  }
+
+  public void move_bw(PVector start_point, PVector end_point)
+  {
+    this.end_point = end_point;
+    // make sure segment is of constant length
+    start_point = start_point
+      .sub(end_point)
+      .setMag(this.length)
+      .add(end_point);
+    this.start_point = start_point;
+  }
+
+  public void move(PVector start_point)
+  {
+    this.start_point = start_point;
+  }
+
+  public PVector getStart()
+  {
+    return start_point.copy();
+  }
+
+  public PVector getEnd()
+  {
+    return end_point.copy();
+  }
+
   public void render()
   {
     PVector line = PVector.sub(end_point, start_point);
