@@ -41,14 +41,14 @@ class Spider
         left_joint,
         left_desired,
         this.legLength, 
-        2
+        3
         )
       );
       right_legs.add(new Leg(
         right_joint,
         right_desired,
         this.legLength,
-        2
+        3
         )
       );
       legBodyPosition -= this.length / (this.legNumber - 1);
@@ -71,17 +71,30 @@ class Spider
   public PVector desired_position(PVector joint)
   {
     PVector desired_heading = joint.copy();
-    desired_heading.sub(this.position).setMag(this.legLength * 0.85f);
+    desired_heading.sub(this.position).setMag(this.legLength * 0.9f);
     PVector desired = joint.copy();
     desired.add(desired_heading);
     
     return desired;
   }
 
+  public float getX() 
+  {
+    return this.position.x;
+  }
+
+  public float getY()
+  {
+    return this.position.y;
+  }
+
   public void move(PVector delta_position)
   {
-    this.position.add(delta_position);
-    this.heading = delta_position.normalize();
+    this.heading.add(delta_position.copy().normalize().mult(0.01)).normalize();
+    PVector move = this.heading.copy();
+    move.mult(delta_position.mag());
+    println(move);
+    this.position.add(move);
 
     this.body.move(
       PVector.add(this.position, this.heading.copy().mult(this.length / 2.0f)),
